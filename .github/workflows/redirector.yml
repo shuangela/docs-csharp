@@ -1,0 +1,43 @@
+name: Redirect Optimizer
+run-name: Optimize redirects file
+on:
+  workflow_dispatch:
+  pull_request:
+  
+# check for deleted/renamed
+jobs:
+  redirects-needed:
+    name: Redirects needed?
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Get renamed/deleted files
+        id: renamed-deleted-files
+        uses: actions/checkout@v4
+
+      - name: Check for deleted or renamed files
+        run: |
+          # Get the list of deleted and renamed files
+          deleted_files=$(git diff --name-status origin/main...HEAD | grep '^D')
+          renamed_files=$(git diff --name-status origin/main...HEAD | grep '^R')
+
+          if [ -n "$deleted_files" ]; then
+            echo "Deleted files:"
+            echo "deleted_files=$deleted_files" >> $GITHUB_OUTPUT
+          else
+            echo "No files deleted."
+          fi
+
+          if [ -n "$renamed_files" ]; then
+            echo "Renamed files:"
+            echo "$renamed_files"
+          else
+            echo "No files renamed."
+          fi
+      - name: Update the PR Description
+        uses: MongoCaleb/pr-description-action@master
+        with:
+          content: "- [ ] Do you need redirects for the following files?\n- - ${{ steps.renamed-deleted-files.outputs.deleted_files }}"
+          token: ${{ secrets.GITHUB_TOKEN }}
