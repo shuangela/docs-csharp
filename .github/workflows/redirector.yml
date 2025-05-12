@@ -20,8 +20,8 @@ jobs:
       - name: Check for deleted or renamed files
         run: |
           # Get the list of deleted and renamed files
-          deleted_files=$(git diff --name-status origin/master...HEAD | grep '^D')
-          renamed_files=$(git diff --name-status origin/master...HEAD | grep '^R')
+          deleted_files=$(git diff --name-status upstream/master...HEAD | grep '^D')
+          renamed_files=$(git diff --name-status upstream/master...HEAD | grep '^R')
 
           if [ -n "$deleted_files" ]; then
             echo "Deleted files:"
