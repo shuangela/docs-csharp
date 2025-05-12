@@ -21,23 +21,11 @@ jobs:
 
       - name: Check for deleted or renamed files
         run: |
-          # Get the list of deleted and renamed files
-          deleted_files=$(git diff --name-status origin/master | grep '^D')
-          renamed_files=$(git diff --name-status origin/master | grep '^R')
-
-          if [ -n "$deleted_files" ]; then
-            echo "Deleted files:"
-            echo "deleted_files=$deleted_files" >> $GITHUB_OUTPUT
-          else
-            echo "No files deleted."
-          fi
-
-          if [ -n "$renamed_files" ]; then
-            echo "Renamed files:"
-            echo "$renamed_files"
-          else
-            echo "No files renamed."
-          fi
+          echo $(git remote --verbose)
+          echo $(pwd)
+          echo "Current Repository: ${{ github.repository }}"
+          echo "Current Branch: ${{ github.ref }}"
+          echo "Branch Name: ${{ github.ref_name }}"
       - name: Update the PR Description
         uses: MongoCaleb/pr-description-action@master
         with:
