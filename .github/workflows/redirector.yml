@@ -13,21 +13,39 @@ jobs:
       contents: read
       pull-requests: write
     steps:
-      - name: Get renamed/deleted files
-        id: renamed-deleted-files
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - id: changed-files
+        # pin to a specific commit to ensure stability
+        uses: tj-actions/changed-files@c65cd883420fd2eb864698a825fc4162dd94482c
         with:
-          fetch-depth: 2
-
-      - name: Check for deleted or renamed files
+          separator: ","
+          files: |
+            *.txt
+      - id: build-checklist-items
+        env:
+          RENAMED_FILES: ${{ steps.changed-files.outputs.renamed_files }}
+          DELETED_FILES: ${{ steps.changed-files.outputs.deleted_files }}
         run: |
-          echo $(git remote --verbose)
-          echo $(pwd)
-          echo "Current Repository: ${{ github.repository }}"
-          echo "Current Branch: ${{ github.ref }}"
-          echo "Branch Name: ${{ github.ref_name }}"
+          renamed_files_list=""
+          deleted_files_list=""
+          
+          #renamed files
+          if ${{ steps.changed-files.outputs.renamed_files_count }} > 0
+            for file in $RENAMED_FILES; do
+              renamed_files_list+="<li>$file</li>"
+            done
+          fi
+          
+          #deleted files
+          if ${{ steps.changed-files.outputs.deleted_files_count }} > 0
+            for file in $DELETED_FILES; do
+              deleted_files_list+="<li>$file</li>"
+            done
+          fi
+          echo "renamed_files=${renamed_files_list}" >> "$GITHUB_OUTPUT"
+          echo "deleted_files=${deleted_files_list}" >> "$GITHUB_OUTPUT"
       - name: Update the PR Description
         uses: MongoCaleb/pr-description-action@master
         with:
-          content: "- [ ] Do you need redirects for the following files?\n- - ${{ steps.renamed-deleted-files.outputs.deleted_files }}"
+          content: "${{ steps.build-checklist-items.outputs.renamed_files }}${{ steps.build-checklist-items.outputs.deleted_files }}"
           token: ${{ secrets.GITHUB_TOKEN }}
