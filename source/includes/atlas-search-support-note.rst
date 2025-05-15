@@ -1,5 +1,7 @@
 .. note:: 
 
+   TESTING EXTENSION (not prod)
+
    Atlas Search does not support the following:
 
    - Non-default coordinate reference system (CRS)
