@@ -1,6 +1,6 @@
 .. note:: 
 
-   TESTING EXTENSION (not prod) testing again. always testing.
+   TESTING EXTENSION (not prod) testing again. test part deux.
 
    Atlas Search does not support the following:
 
