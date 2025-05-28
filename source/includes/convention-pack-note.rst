@@ -1,6 +1,6 @@
 .. note::
 
-   i love to test this extension. testing daily. test test. test again.
+   i love to test this extension. testing daily. test test. test again. hi part two.
 
    The documents in the ``restaurants`` collection use the snake-case naming
    convention. The examples in this guide use a ``ConventionPack``
