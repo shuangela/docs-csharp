@@ -16,6 +16,8 @@ Connection Troubleshooting
 This page offers potential solutions to issues you might encounter when
 using the {+driver-long+} to connect to a MongoDB deployment.
 
+testing for skunkworks
+
 .. note::
 
    This page addresses only connection issues. If you encounter any other issues
